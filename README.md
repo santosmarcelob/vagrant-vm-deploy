@@ -138,7 +138,7 @@ As seguintes ferramentas foram utilizadas:
    }
    ```
 
-5. Renomeie o arquivo **VagrantfileAzure** para "**Vagrantfile**". Os valores `tenant`, `appId` e`password` deverão ser inseridos em `azure.tenant_id`, `azure.client_id` e`azure.client_secret` no arquivo Vagrantfile.
+5. Utilize o arquivo "**Vagrantfile**" localizado na pasta "Azure". Os valores `tenant`, `appId` e`password` deverão ser inseridos em `azure.tenant_id`, `azure.client_id` e`azure.client_secret` no arquivo Vagrantfile.
 
    ```ruby
    azure.tenant_id = 'AZURE_TENANT_ID'
@@ -230,8 +230,6 @@ As seguintes ferramentas foram utilizadas:
          Architecture: x86-64
    Connection to winter-sea-51.westus.cloudapp.azure.com closed.
    ```
-
-   ![image-20210502222535639](C:\Users\santo\AppData\Roaming\Typora\typora-user-images\image-20210502222535639.png)
 
 10. Para acessar a máquina, execute `vagrant ssh host1`:
 
