@@ -1,8 +1,5 @@
-<br />
-
 <p align="center">
   <h3 align="center">Teste: Infrastructure-as-Code</h3>
-
 </p>
 
 <details open="open">
@@ -12,13 +9,19 @@
       <a href="#resumo">Resumo</a>
     </li>
     <li>
-      <a href="#implementação">Implementação</a>
+      <a href="#implementação-com-virtualbox">Implementação com VirtualBox</a>
       <ul>
         <li><a href="#pré-requisitos">Pré-requisitos</a></li>
         <li><a href="#instalação">Instalação</a></li>
       </ul>
     </li>
-    <li><a href="#validação">Validação</a></li>
+    <li>
+      <a href="#implementação-no-azure">Implementação no Azure</a>
+      <ul>
+        <li><a href="#pré-requisitos-azure">Pré-requisitos</a></li>
+        <li><a href="#instalação-azure">Instalação</a></li>
+      </ul>
+     <li><a href="#validação">Validação</a></li>
   </ol>
 </details>
 
@@ -34,7 +37,7 @@ O objetivo é a utilização de alguma ferramenta de Infrastructure-As-Code para
 * Variável de ambiente: NUMERO_DA_SORTE=777
 * Criar 3 VMs com IPs únicos
 
-## Implementação
+## Implementação com VirtualBox
 
 ### Pré-requisitos
 
@@ -100,9 +103,148 @@ As seguintes ferramentas foram utilizadas:
 
    Para acessar as outras VMs, altere **"host1"** pelo respectivo *hostname* da VM.
 
+## Implementação no Azure
+
+Também é possível utilizar esta solução para deploy de máquinas em nuvem. A cloud Azure foi utilizada nesta implementação.
+
+### Pré-requisitos Azure
+
+As seguintes ferramentas foram utilizadas:
+
+* [Vagrant](https://www.vagrantup.com/downloads)
+* [Conta Microsoft Azure](https://azure.microsoft.com/pt-br/free/)
+
+### Instalação Azure
+
+1. Clone o repositório
+
+   ```sh
+   git clone https://github.com/santosmarcelob/teste-iac.git
+   ```
+
+2. Instale o [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+
+3. Faça o login no Azure com `az login`
+
+4. execute `az ad sp create-for-rbac` para criar uma aplicação AD com acesso ao Azure Resource Manager
+
+   ```powershell
+   {
+     "appId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+     "displayName": "some-display-name",
+     "name": "http://azure-cli-2017-04-03-15-30-52",
+     "password": "XXXXXXXXXXXXXXXXXXXX",
+     "tenant": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+   }
+   ```
+
+5. Renomeie o arquivo **VagrantfileAzure** para "**Vagrantfile**". Os valores `tenant`, `appId` e`password` deverão ser inseridos em `azure.tenant_id`, `azure.client_id` e`azure.client_secret` no arquivo Vagrantfile.
+
+   ```ruby
+   azure.tenant_id = 'AZURE_TENANT_ID'
+   azure.client_id = 'AZURE_CLIENT_ID'
+   azure.client_secret = 'AZURE_CLIENT_SECRET'
+   azure.subscription_id = 'AZURE_SUBSCRIPTION_ID'
+   ```
+
+6. Por padrão, serão criadas 3 VMs, para alterar a quantidade de VMs, edite o valor da variável **vms** no arquivo Vagrantfile. 
+
+   ```ruby
+   vms = 3 
+   ```
+
+7. Crie uma pasta .ssh e gere uma chave SSH Key nesta pasta.
+
+   ```powershell
+   PS C:\vagrant-azure> ssh-keygen
+   Generating public/private rsa key pair.
+   Enter file in which to save the key (C:\Users\santo/.ssh/id_rsa): C:\vagrant-azure/.ssh/id_rsa
+   Enter passphrase (empty for no passphrase):
+   Enter same passphrase again:
+   Your identification has been saved in C:\vagrant-azure/.ssh/id_rsa.
+   Your public key has been saved in C:\vagrant-azure/.ssh/id_rsa.pub.
+   The key fingerprint is:
+   SHA256:iviuiDl1oEqYLIY2Pm/cK5slAw76Q6xhlvWnpaWROnk santo@DESKTOP-LE6RFSH
+   The key's randomart image is:
+   +---[RSA 2048]----+
+   |                 |
+   |                 |
+   |                 |
+   |  ..             |
+   |==o.. . S        |
+   |@X=..= =         |
+   |@*++=.X          |
+   |=*.O=E           |
+   |+.*BB..          |
+   +----[SHA256]-----+
+   ```
+
+8. Instale o plugin **vagrant-azure**, e execute `vagrant up --provider=azure` para fazer o deploy
+
+   ```powershell
+   PS C:\vagrant-azure> vagrant plugin install vagrant-azure
+   Installing the 'vagrant-azure' plugin. This can take a few minutes...
+   ```
+
+   ```powershell
+   PS C:\vagrant-azure> vagrant up --provider=azure
+   Bringing machine 'host1' up with 'azure' provider...
+   Bringing machine 'host2' up with 'azure' provider...
+   Bringing machine 'host3' up with 'azure' provider...
+   ```
+
+9. Após o deploy estar completo será possível acessar as máquinas via ssh ou diretamente no Azure Portal.
+
+   ```powershell
+   PS C:\vagrant-azure> vagrant status
+   Current machine states:
+   
+   host1                     running (azure)
+   host2                     running (azure)
+   host3                     running (azure)
+   ```
+
+   ```powershell
+   PS C:\vagrant-azure> vagrant ssh host1 -c "hostnamectl"
+      Static hostname: floral-glade-70
+            Icon name: computer-vm
+              Chassis: vm
+           Machine ID: 6cc37d7585ce476d8909603a266fb56f
+              Boot ID: 95ecf6e796e543f0a2291be869398e9c
+       Virtualization: microsoft
+     Operating System: CentOS Linux 8 (Core)
+          CPE OS Name: cpe:/o:centos:centos:8
+               Kernel: Linux 4.18.0-193.28.1.el8_2.x86_64
+         Architecture: x86-64
+   Connection to floral-glade-70.westus.cloudapp.azure.com closed.
+   PS C:\vagrant-azure> vagrant ssh host2 -c "hostnamectl"
+      Static hostname: winter-sea-51
+            Icon name: computer-vm
+              Chassis: vm
+           Machine ID: 6cc37d7585ce476d8909603a266fb56f
+              Boot ID: 6f2977082704480a9d7ccdca1e2803c2
+       Virtualization: microsoft
+     Operating System: CentOS Linux 8 (Core)
+          CPE OS Name: cpe:/o:centos:centos:8
+               Kernel: Linux 4.18.0-193.28.1.el8_2.x86_64
+         Architecture: x86-64
+   Connection to winter-sea-51.westus.cloudapp.azure.com closed.
+   ```
+
+   ![image-20210502222535639](C:\Users\santo\AppData\Roaming\Typora\typora-user-images\image-20210502222535639.png)
+
+10. Para acessar a máquina, execute `vagrant ssh host1`:
+
+    ```powershell
+    PS C:\vagrant-azure> vagrant ssh host1
+    [vagrant@floral-glade-70 ~]$
+    ```
+
+    Para acessar as outras VMs, altere **"host1"** pelo respectivo *hostname* da VM.
+
 ## Validação
 
-Abaixo a validação das configurações efetuadas:
+A validação das configurações foi efetuada em todas as VMs criadas:
 
 1. Sistema Operacional: **CentOS Linux 8 x86_64**
 
@@ -181,4 +323,6 @@ Abaixo a validação das configurações efetuadas:
    _=/usr/bin/printenv
    ```
 
+   
+   
    
