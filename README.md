@@ -163,22 +163,8 @@ As seguintes ferramentas foram utilizadas:
    Enter same passphrase again:
    Your identification has been saved in C:\vagrant-azure/.ssh/id_rsa.
    Your public key has been saved in C:\vagrant-azure/.ssh/id_rsa.pub.
-   The key fingerprint is:
-   SHA256:iviuiDl1oEqYLIY2Pm/cK5slAw76Q6xhlvWnpaWROnk santo@DESKTOP-LE6RFSH
-   The key's randomart image is:
-   +---[RSA 2048]----+
-   |                 |
-   |                 |
-   |                 |
-   |  ..             |
-   |==o.. . S        |
-   |@X=..= =         |
-   |@*++=.X          |
-   |=*.O=E           |
-   |+.*BB..          |
-   +----[SHA256]-----+
    ```
-
+   
 8. Instale o plugin **vagrant-azure**, e execute `vagrant up --provider=azure` para fazer o deploy
 
    ```powershell
