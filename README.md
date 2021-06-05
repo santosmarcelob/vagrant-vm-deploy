@@ -1,6 +1,7 @@
 <p align="center">
-  <h3 align="center">Teste: Infrastructure-as-Code</h3>
+  <h3 align="center">Automação do deployment de VMs no Azure e VirtualBox</h3>
 </p>
+
 
 <details open="open">
   <summary>Tópicos</summary>
@@ -27,7 +28,7 @@
 
 ## Resumo
 
-O objetivo é a utilização de alguma ferramenta de Infrastructure-As-Code para a criação e configuração de VMs automaticamente.
+O objetivo é a utilização do Vagrant para a criação e configuração de VMs automaticamente.
 
 * Criação de VM de forma automatizada:
   * SO: CentOS Linux 8 x86_64
@@ -51,7 +52,7 @@ As seguintes ferramentas foram utilizadas:
 1. Clone o repositório
 
    ```sh
-   git clone https://github.com/santosmarcelob/teste-iac.git
+   git clone https://github.com/santosmarcelob/vagrant-vm-deploy.git
    ```
 
 2. Por padrão, serão criadas 3 VMs, para alterar a quantidade de VMs, edite o valor da variável **vms** no arquivo Vagrantfile. 
@@ -60,10 +61,10 @@ As seguintes ferramentas foram utilizadas:
    vms = 3 
    ```
 
-3. Dentro da pasta **teste-IaC**, execute `vagrant up` e o vagrant iniciará a criação das VMs. 
+3. Dentro da pasta **vagrant-vm-deploy**, execute `vagrant up` e o vagrant iniciará a criação das VMs. 
 
    ```powershell
-   PS C:\teste-IaC> vagrant up
+   PS C:\vagrant-vm-deploy> vagrant up
    Bringing machine 'host1' up with 'virtualbox' provider...
    Bringing machine 'host2' up with 'virtualbox' provider...
    Bringing machine 'host3' up with 'virtualbox' provider...
@@ -72,7 +73,7 @@ As seguintes ferramentas foram utilizadas:
    Após alguns minutos, as máquinas estarão criadas.
 
    ```powershell
-   PS C:\teste-IaC> vagrant status
+   PS C:\vagrant-vm-deploy> vagrant status
    Current machine states:
    
    host1                     running (virtualbox)
@@ -83,13 +84,13 @@ As seguintes ferramentas foram utilizadas:
    Os IPs serão iniciados em ***172.16.5.2 (host1)*** e incrementarão conforme a quantidade de máquinas.
 
    ```powershell
-   PS C:\teste-IaC> vagrant ssh host1 -c "ip a | grep 172"
+   PS C:\vagrant-vm-deploy> vagrant ssh host1 -c "ip a | grep 172"
        inet 172.16.5.2/24 brd 172.16.5.255 scope global noprefixroute eth1
    Connection to 127.0.0.1 closed.
-   PS C:\teste-IaC> vagrant ssh host2 -c "ip a | grep 172"
+   PS C:\vagrant-vm-deploy> vagrant ssh host2 -c "ip a | grep 172"
        inet 172.16.5.3/24 brd 172.16.5.255 scope global noprefixroute eth1
    Connection to 127.0.0.1 closed.
-   PS C:\teste-IaC> vagrant ssh host3 -c "ip a | grep 172"
+   PS C:\vagrant-vm-deploy> vagrant ssh host3 -c "ip a | grep 172"
        inet 172.16.5.4/24 brd 172.16.5.255 scope global noprefixroute eth1
    Connection to 127.0.0.1 closed.
    ```
@@ -97,7 +98,7 @@ As seguintes ferramentas foram utilizadas:
 4. Para acessar a máquina, execute `vagrant ssh host1`:
 
    ```powershell
-   PS C:\teste-IaC> vagrant ssh host1
+   PS C:\vagrant-vm-deploy> vagrant ssh host1
    [vagrant@host1 ~]$
    ```
 
@@ -119,7 +120,7 @@ As seguintes ferramentas foram utilizadas:
 1. Clone o repositório
 
    ```sh
-   git clone https://github.com/santosmarcelob/teste-iac.git
+   git clone https://github.com/santosmarcelob/vagrant-vm-deploy.git
    ```
 
 2. Instale o [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
